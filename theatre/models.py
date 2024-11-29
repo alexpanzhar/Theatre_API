@@ -36,7 +36,7 @@ class Genre(models.Model):
 class Play(models.Model):
     title = models.CharField(max_length=255, unique=True)
     description = models.TextField()
-    actors = (models.ManyToManyField(Actor, related_name="plays", blank=True))
+    actors = models.ManyToManyField(Actor, related_name="plays", blank=True)
     genres = models.ManyToManyField(Genre, related_name="plays", blank=True)
 
     class Meta:

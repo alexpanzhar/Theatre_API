@@ -52,7 +52,12 @@ class UserAdminTests(TestCase):
 
     def test_list_display_configuration(self):
         """Test the list_display configuration in the admin."""
-        expected_list_display = ("email", "first_name", "last_name", "is_staff")
+        expected_list_display = (
+            "email",
+            "first_name",
+            "last_name",
+            "is_staff",
+        )
         self.assertEqual(UserAdmin.list_display, expected_list_display)
 
     def test_search_fields_configuration(self):
@@ -74,6 +79,8 @@ class UserAdminTests(TestCase):
         )
         self.client.force_login(admin_user)
 
-        url = reverse("admin:user_user_changelist")  # Default URL pattern for User in admin
+        url = reverse(
+            "admin:user_user_changelist"
+        )  # Default URL pattern for User in admin
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)

@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "theatre.apps.TheatreConfig",
     "user.apps.UserConfig",
     "rest_framework",
-    "debug_toolbar"
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [

@@ -7,8 +7,7 @@ from .models import (
     TheatreHall,
     Performance,
     Reservation,
-    Ticket
-
+    Ticket,
 )
 
 # Register your models here.
