@@ -47,7 +47,7 @@ class Play(models.Model):
 
 
 class TheatreHall(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
     rows = models.PositiveIntegerField()
     seats_in_row = models.PositiveIntegerField()
 
