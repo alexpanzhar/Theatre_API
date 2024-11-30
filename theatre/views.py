@@ -1,13 +1,15 @@
+from datetime import datetime
+
 from rest_framework import viewsets
 
-from theatre.models import Genre, Actor, TheatreHall, Play
+from theatre.models import Genre, Actor, TheatreHall, Play, Performance
 from theatre.serializers import (
     GenreSerializer,
     ActorSerializer,
     TheatreHallSerializer,
     PlaySerializer,
     PlayListSerializer,
-    PlayDetailSerializer,
+    PlayDetailSerializer, PerformanceSerializer, PerformanceListSerializer,
 )
 
 
@@ -31,7 +33,6 @@ class TheatreHallViewSet(viewsets.ModelViewSet):
 
 class PlayViewSet(viewsets.ModelViewSet):
     queryset = Play.objects.prefetch_related("genres", "actors")
-    serializer_class = PlaySerializer
 
     def _filter_by_ids(self, queryset, param_name, field_name):
         """Filter queryset by a comma-separated list of IDs."""
@@ -41,7 +42,7 @@ class PlayViewSet(viewsets.ModelViewSet):
                 id_list = [int(str_id) for str_id in ids.split(",")]
                 return queryset.filter(**{f"{field_name}__id__in": id_list})
             except ValueError:
-                return queryset
+                return queryset  # TODO: return empty queryset
         return queryset
 
     def get_queryset(self):
@@ -65,3 +66,31 @@ class PlayViewSet(viewsets.ModelViewSet):
             return PlayDetailSerializer
 
         return PlaySerializer
+
+
+class PerformanceViewSet(viewsets.ModelViewSet):
+    queryset = (
+        Performance.objects.all()
+        .select_related("play", "theatre_hall")
+    )
+
+    def get_queryset(self):
+        date = self.request.query_params.get("date")
+        play_id_str = self.request.query_params.get("play")
+
+        queryset = self.queryset
+
+        try:
+            if date:
+                date = datetime.strptime(date, "%Y-%m-%d").date()
+                queryset = queryset.filter(show_time__date=date)
+            if play_id_str:
+                queryset = queryset.filter(play_id=int(play_id_str))
+        except (ValueError, TypeError):
+            return self.queryset.none()
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PerformanceListSerializer
+        return PerformanceSerializer
