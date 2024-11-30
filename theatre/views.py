@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime
 
 from rest_framework import viewsets
@@ -12,8 +13,9 @@ from theatre.serializers import (
     PlayDetailSerializer, PerformanceSerializer, PerformanceListSerializer,
 )
 
-
 # Create your views here.
+
+logger = logging.getLogger(__name__)
 
 
 class GenreViewSet(viewsets.ModelViewSet):
@@ -37,13 +39,14 @@ class PlayViewSet(viewsets.ModelViewSet):
     def _filter_by_ids(self, queryset, param_name, field_name):
         """Filter queryset by a comma-separated list of IDs."""
         ids = self.request.query_params.get(param_name)
-        if ids:
-            try:
-                id_list = [int(str_id) for str_id in ids.split(",")]
-                return queryset.filter(**{f"{field_name}__id__in": id_list})
-            except ValueError:
-                return queryset  # TODO: return empty queryset
-        return queryset
+        if not ids:
+            return queryset
+        try:
+            id_list = map(int, ids.split(","))
+            return queryset.filter(**{f"{field_name}__id__in": id_list})
+        except ValueError:
+            logger.warning(f"Invalid ID list for {param_name}: {ids}")
+            return queryset.none()
 
     def get_queryset(self):
         """Retrieve plays with optional filters."""
