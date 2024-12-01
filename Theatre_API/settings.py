@@ -139,6 +139,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "user.permissions.IsAdminOrIfAuthenticatedReadOnly",
     ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 25
 }
 
 SIMPLE_JWT = {
