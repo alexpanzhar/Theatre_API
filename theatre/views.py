@@ -1,9 +1,12 @@
 import logging
 from datetime import datetime
 
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import GenericViewSet
 
-from theatre.models import Genre, Actor, TheatreHall, Play, Performance
+from theatre.models import Genre, Actor, TheatreHall, Play, Performance, Reservation
 from theatre.serializers import (
     GenreSerializer,
     ActorSerializer,
@@ -12,7 +15,7 @@ from theatre.serializers import (
     PlayListSerializer,
     PlayDetailSerializer,
     PerformanceSerializer,
-    PerformanceListSerializer,
+    PerformanceListSerializer, PerformanceDetailSerializer, ReservationListSerializer, ReservationSerializer,
 )
 
 # Create your views here.
@@ -95,4 +98,36 @@ class PerformanceViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return PerformanceListSerializer
+        elif self.action == "retrieve":
+            return PerformanceDetailSerializer
         return PerformanceSerializer
+
+
+class ReservationPagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 100
+
+
+class ReservationViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    GenericViewSet,
+):
+    queryset = Reservation.objects.prefetch_related(
+        "tickets__performance__theatre_hall",
+        "tickets__performance__play"
+    )
+    pagination_class = ReservationPagination
+    serializer_class = ReservationSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ReservationListSerializer
+        return ReservationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
