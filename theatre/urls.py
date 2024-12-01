@@ -5,7 +5,8 @@ from theatre.views import (
     GenreViewSet,
     ActorViewSet,
     TheatreHallViewSet,
-    PlayViewSet, PerformanceViewSet,
+    PlayViewSet,
+    PerformanceViewSet,
 )
 
 app_name = "theatre"

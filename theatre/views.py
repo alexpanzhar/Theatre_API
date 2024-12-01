@@ -10,7 +10,9 @@ from theatre.serializers import (
     TheatreHallSerializer,
     PlaySerializer,
     PlayListSerializer,
-    PlayDetailSerializer, PerformanceSerializer, PerformanceListSerializer,
+    PlayDetailSerializer,
+    PerformanceSerializer,
+    PerformanceListSerializer,
 )
 
 # Create your views here.
@@ -72,10 +74,7 @@ class PlayViewSet(viewsets.ModelViewSet):
 
 
 class PerformanceViewSet(viewsets.ModelViewSet):
-    queryset = (
-        Performance.objects.all()
-        .select_related("play", "theatre_hall")
-    )
+    queryset = Performance.objects.all().select_related("play", "theatre_hall")
 
     def get_queryset(self):
         date = self.request.query_params.get("date")
