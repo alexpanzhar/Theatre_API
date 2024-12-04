@@ -8,7 +8,14 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from theatre.models import Genre, Actor, TheatreHall, Play, Performance, Reservation
+from theatre.models import (
+    Genre,
+    Actor,
+    TheatreHall,
+    Play,
+    Performance,
+    Reservation,
+)
 from theatre.serializers import (
     GenreSerializer,
     ActorSerializer,
@@ -17,7 +24,10 @@ from theatre.serializers import (
     PlayListSerializer,
     PlayDetailSerializer,
     PerformanceSerializer,
-    PerformanceListSerializer, PerformanceDetailSerializer, ReservationListSerializer, ReservationSerializer,
+    PerformanceListSerializer,
+    PerformanceDetailSerializer,
+    ReservationListSerializer,
+    ReservationSerializer,
     PlayImageSerializer,
 )
 
@@ -80,7 +90,12 @@ class PlayViewSet(viewsets.ModelViewSet):
 
         return PlaySerializer
 
-    @action(methods=["POST"], detail=True, url_path="upload-image", permission_classes=[IsAdminUser])
+    @action(
+        methods=["POST"],
+        detail=True,
+        url_path="upload-image",
+        permission_classes=[IsAdminUser],
+    )
     def upload_image(self, request, pk=None):
         item = self.get_object()
         serializer = self.get_serializer(item, data=request.data)
@@ -130,8 +145,7 @@ class ReservationViewSet(
     GenericViewSet,
 ):
     queryset = Reservation.objects.prefetch_related(
-        "tickets__performance__theatre_hall",
-        "tickets__performance__play"
+        "tickets__performance__theatre_hall", "tickets__performance__play"
     )
     pagination_class = ReservationPagination
     serializer_class = ReservationSerializer

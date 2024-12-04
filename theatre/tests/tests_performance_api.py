@@ -8,7 +8,10 @@ from rest_framework.reverse import reverse
 from rest_framework.test import APIClient
 
 from theatre.models import Performance, Play, TheatreHall
-from theatre.serializers import PerformanceListSerializer, PerformanceDetailSerializer
+from theatre.serializers import (
+    PerformanceListSerializer,
+    PerformanceDetailSerializer,
+)
 
 PERFORMANCE_URL = reverse("theatre:performance-list")
 
@@ -130,7 +133,9 @@ class AuthenticatedStaffPerformanceTests(TestCase):
         performance = Performance.objects.get(id=res.data["id"])
         self.assertEqual(performance.play, play)
         self.assertEqual(performance.theatre_hall, theatre_hall)
-        self.assertEqual(performance.show_time.isoformat(), payload["show_time"])
+        self.assertEqual(
+            performance.show_time.isoformat(), payload["show_time"]
+        )
 
     def test_update_performance(self):
 
@@ -151,4 +156,6 @@ class AuthenticatedStaffPerformanceTests(TestCase):
         res = self.client.delete(url)
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Performance.objects.filter(id=performance.id).exists())
+        self.assertFalse(
+            Performance.objects.filter(id=performance.id).exists()
+        )

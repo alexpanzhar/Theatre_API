@@ -85,7 +85,9 @@ class AuthenticatedStaffTheatreHallTests(TestCase):
         self.assertEqual(theatre_hall.capacity, 100)
 
     def test_update_theatre_hall(self):
-        theatre_hall = sample_theatre_hall(name="Old Hall", rows=10, seats_in_row=10)
+        theatre_hall = sample_theatre_hall(
+            name="Old Hall", rows=10, seats_in_row=10
+        )
         payload = {"name": "Updated Hall", "rows": 5, "seats_in_row": 5}
         url = detail_url(theatre_hall.id)
         res = self.client.patch(url, payload)
@@ -101,4 +103,6 @@ class AuthenticatedStaffTheatreHallTests(TestCase):
         res = self.client.delete(url)
 
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(TheatreHall.objects.filter(id=theatre_hall.id).exists())
+        self.assertFalse(
+            TheatreHall.objects.filter(id=theatre_hall.id).exists()
+        )

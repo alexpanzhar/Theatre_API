@@ -47,7 +47,10 @@ class UnauthenticatedReservationTests(TestCase):
     def test_auth_required_for_reservation_list(self):
         reservation = sample_reservation(user=self.user)
         Ticket.objects.create(
-            reservation=reservation, performance=sample_performance(), row=1, seat=1
+            reservation=reservation,
+            performance=sample_performance(),
+            row=1,
+            seat=1,
         )
 
         res = self.client.get(RESERVATION_URL)

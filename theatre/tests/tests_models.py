@@ -27,7 +27,9 @@ class GenreModelTest(TestCase):
 class PlayModelTest(TestCase):
     def setUp(self):
         self.actor1 = Actor.objects.create(first_name="John", last_name="Doe")
-        self.actor2 = Actor.objects.create(first_name="Jane", last_name="Smith")
+        self.actor2 = Actor.objects.create(
+            first_name="Jane", last_name="Smith"
+        )
         self.genre = Genre.objects.create(name="Comedy")
         self.play = Play.objects.create(
             title="Funny Play", description="A great comedy."
@@ -39,7 +41,9 @@ class PlayModelTest(TestCase):
         self.assertEqual(str(self.play), "Funny Play")
 
     def test_play_actors(self):
-        self.assertEqual(list(self.play.actors.all()), [self.actor1, self.actor2])
+        self.assertEqual(
+            list(self.play.actors.all()), [self.actor1, self.actor2]
+        )
 
     def test_play_genres(self):
         self.assertIn(self.genre, self.play.genres.all())
@@ -67,13 +71,17 @@ class PerformanceModelTest(TestCase):
             name="Main Hall", rows=10, seats_in_row=15
         )
         self.performance = Performance.objects.create(
-            show_time=make_aware(datetime(2024, 12, 1, 19, 30), timezone=pytz.UTC),
+            show_time=make_aware(
+                datetime(2024, 12, 1, 19, 30), timezone=pytz.UTC
+            ),
             play=self.play,
             theatre_hall=self.hall,
         )
 
     def test_performance_str(self):
-        self.assertEqual(str(self.performance), "Funny Play 2024-12-01 19:30:00+00:00")
+        self.assertEqual(
+            str(self.performance), "Funny Play 2024-12-01 19:30:00+00:00"
+        )
 
 
 class TicketModelTest(TestCase):

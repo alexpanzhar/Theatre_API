@@ -73,7 +73,9 @@ class PlayImageUploadTests(TestCase):
     def test_upload_invalid_image(self):
 
         url = image_upload_url(self.play.id)
-        res = self.client.post(url, {"image": "not an image"}, format="multipart")
+        res = self.client.post(
+            url, {"image": "not an image"}, format="multipart"
+        )
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
 
