@@ -68,3 +68,29 @@ file before starting the project.
 3. Run the container:
    ```bash
    docker-compose up
+
+## Managing access
+
+Use the following command to load prepared data from fixture:
+  `python manage.py loaddata theatre_db_data.json`.
+
+After loading data from fixture you can use:
+1. Following superuser (or create another one by yourself):
+
+- E-mail: `admin.user@theatre.com`
+- Password: `admin`
+
+2. Following user (or create another using  `api/user/register/` endpoint):
+- E-mail: `user_1@theatre.com`
+- Password: `user_1`
+
+For getting access and refresh tokens, follow `/api/user/token` endpoint
+
+## API Endpoints
+API provides different endpoints for managing Genres, Actors, Theatre Halls, Performances, Plays and Reservations. 
+Follow `api/schema/swagger-ui/` or `api/schema/redoc/` to see
+and manipulate with all endpoint.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
