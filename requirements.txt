@@ -21,13 +21,17 @@ packaging==24.2
 pathspec==0.12.1
 pillow==11.0.0
 platformdirs==4.3.6
+psycopg==3.2.3
+psycopg-binary==3.2.3
 pycodestyle==2.12.1
 pyflakes==3.2.0
 PyJWT==2.10.1
+python-dotenv==1.0.1
 pytz==2024.2
 PyYAML==6.0.2
 referencing==0.35.1
 rpds-py==0.22.3
 setuptools==75.6.0
 sqlparse==0.5.2
+typing_extensions==4.12.2
 uritemplate==4.1.1
