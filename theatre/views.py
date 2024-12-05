@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 
 from django.db.models import Count, F
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
@@ -107,6 +108,31 @@ class PlayViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "title",
+                type={
+                    "type": "string",
+                },
+                description="Filter by title (ex. ?title='some_title')",
+            ),
+            OpenApiParameter(
+                "genres",
+                type={"type": "array", "items": {"type": "number"}},
+                description="Filter by genres id's (ex. ?genres=1,2,n)",
+            ),
+            OpenApiParameter(
+                "actors",
+                type={"type": "array", "items": {"type": "number"}},
+                description="Filter by actors id's (ex. ?actors=1,2,n)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """Get list of movies"""
+        return super().list(request, *args, **kwargs)
+
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = (
@@ -114,9 +140,9 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         .select_related("play", "theatre_hall")
         .annotate(
             tickets_available=(
-                F("theatre_hall__rows")
-                * F("theatre_hall__seats_in_row")
-                - Count("tickets")
+                    F("theatre_hall__rows")
+                    * F("theatre_hall__seats_in_row")
+                    - Count("tickets")
             )
         )
     )
@@ -143,6 +169,28 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         elif self.action == "retrieve":
             return PerformanceDetailSerializer
         return PerformanceSerializer
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "date",
+                type={
+                    "type": "date",
+                },
+                description="Filter by date (ex. ?date='year-month-day')",
+            ),
+            OpenApiParameter(
+                "play",
+                type={
+                    "type": "number",
+                },
+                description="Filter by plays id's (ex. ?play=1)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        """Get list of MovieSessions"""
+        return super().list(request, *args, **kwargs)
 
 
 class ReservationPagination(PageNumberPagination):
