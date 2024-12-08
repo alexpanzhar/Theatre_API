@@ -53,7 +53,7 @@ The PostgreSQL service must be locally installed and
 running for the application to function correctly.
 Ensure that your database container or local installation
 is set up with the correct configurations specified in the `.env`
-file before starting the project.
+file before starting the project. The example can be find in `example.env`
 
 ### Docker Setup:
 
